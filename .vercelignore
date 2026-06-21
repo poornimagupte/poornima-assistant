@@ -1,0 +1,6 @@
+src-tauri/
+node_modules/
+.next/
+supabase/.branches/
+supabase/.temp/
+/tmp/

@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* Calm, flat palette carried over from the dashboard mockups.
+   One quiet accent (teal = "your own" actions), info blue for calendar. */
+:root {
+  --page: #faf9f6;
+  --surface: #ffffff;
+  --surface-2: #f3f1ea;
+  --border: rgba(40, 40, 31, 0.1);
+  --border-strong: rgba(40, 40, 31, 0.18);
+  --text: #28281f;
+  --muted: #6b6b63;
+  --faint: #9a9a90;
+  --accent: #1d9e75;
+  --accent-soft: #e1f5ee;
+  --info: #185fa5;
+  --info-soft: #e6f1fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #1a1a18;
+    --surface: #242422;
+    --surface-2: #2c2c2a;
+    --border: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.2);
+    --text: #ece9e0;
+    --muted: #a6a49b;
+    --faint: #76746c;
+    --accent: #5dcaa5;
+    --accent-soft: #0f3a30;
+    --info: #85b7eb;
+    --info-soft: #103050;
+  }
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  background: var(--page);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Small reusable surface, matching the mockup cards */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+}
+
+/* Form controls */
+.input {
+  background: var(--surface-2);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.875rem;
+  outline: none;
+  color: var(--text);
+  width: 100%;
+}
+.input:focus { border-color: var(--border-strong); }
+
+.label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--faint);
+  margin-bottom: 0.25rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-primary:disabled { opacity: 0.5; }
+
+@media print {
+  body > * { display: none !important; }
+  #salary-slip { display: block !important; }
+  .card { border: none !important; }
+}
+
+.btn-ghost {
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  transition: background 0.15s;
+}
+.btn-ghost:hover { background: var(--surface-2); }
