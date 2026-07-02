@@ -1,12 +1,14 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { todayRange } from "@/lib/date";
-import type { Task, Capture, MealPlan } from "@/lib/types";
+import type { Task, Capture, MealPlan, Staff, StaffTransaction } from "@/lib/types";
 import { Sidebar } from "@/components/sidebar";
 import { QuickCapture } from "@/components/quick-capture";
 import { CaptureList } from "@/components/capture-list";
 import { TodayPanel } from "@/components/today-panel";
 import { TodayMenuCard } from "@/components/today-menu-card";
+import { PayRemindersCard } from "@/components/pay-reminders-card";
+import { computePayReminders } from "@/lib/staff-pay";
 import { fetchTodayEvents } from "@/lib/google-calendar";
 
 function greeting(tz: string): string {
@@ -64,6 +66,27 @@ export default async function DashboardPage() {
     tz
   );
 
+  // Salary reminders: active staff with a pay day, minus anyone already
+  // paid this month (salary tx anchored to the current month).
+  const monthStart = new Date().toLocaleDateString("en-CA", { timeZone: tz }).slice(0, 7) + "-01";
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("*")
+    .eq("status", "active")
+    .not("pay_day", "is", null)
+    .is("deleted_at", null);
+
+  const { data: salaryTx } = await supabase
+    .from("staff_transactions")
+    .select("*")
+    .eq("type", "salary")
+    .or(`for_month.gte.${monthStart},and(for_month.is.null,date.gte.${monthStart})`);
+
+  const payReminders = computePayReminders(
+    (staff as Staff[]) ?? [],
+    (salaryTx as StaffTransaction[]) ?? []
+  );
+
   // Today's meal plan
   const todayDate = new Date().toLocaleDateString("en-CA", { timeZone: tz }); // YYYY-MM-DD
   const { data: mealPlan } = await supabase
@@ -98,6 +121,7 @@ export default async function DashboardPage() {
         <div className="mt-6 grid gap-3 md:grid-cols-[1.5fr_1fr]">
           <TodayPanel tasks={(tasks as Task[]) ?? []} calendarEvents={calendarEvents} timeZone={tz} />
           <div className="space-y-3">
+            <PayRemindersCard reminders={payReminders} />
             <CaptureList captures={(captures as Capture[]) ?? []} />
             <TodayMenuCard plan={(mealPlan as MealPlan) ?? null} />
           </div>
