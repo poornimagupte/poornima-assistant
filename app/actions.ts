@@ -188,6 +188,83 @@ export async function removeReminder(formData: FormData) {
   revalidatePath("/tasks");
 }
 
+// --- Stash --------------------------------------------------------------------
+
+export async function addStashItem(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const get = (k: string) => { const v = String(formData.get(k) ?? "").trim(); return v === "" ? null : v; };
+  const tags = (get("tags") ?? "").split(",").map(t => t.trim()).filter(Boolean);
+  await supabase.from("stash_items").insert({
+    user_id: user.id,
+    title: get("title") ?? "Untitled",
+    body: get("body"),
+    source_url: get("source_url"),
+    tags,
+    source: "manual",
+  });
+  revalidatePath("/stash");
+}
+
+export async function updateStashItem(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const supabase = await createClient();
+  const get = (k: string) => { const v = String(formData.get(k) ?? "").trim(); return v === "" ? null : v; };
+  const tags = (get("tags") ?? "").split(",").map(t => t.trim()).filter(Boolean);
+  await supabase.from("stash_items").update({
+    title: get("title") ?? "Untitled",
+    body: get("body"),
+    source_url: get("source_url"),
+    tags,
+  }).eq("id", id);
+  revalidatePath("/stash");
+}
+
+export async function deleteStashItem(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const supabase = await createClient();
+  await supabase.from("stash_items").update({ deleted_at: new Date().toISOString() }).eq("id", id);
+  revalidatePath("/stash");
+}
+
+// Triage a capture into the stash.
+export async function captureToStash(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const content = String(formData.get("content") ?? "").trim();
+  if (!id || !content) return;
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // First line (or first 80 chars) becomes the title; the rest the body.
+  const firstLine = content.split("\n")[0];
+  const title = firstLine.length > 80 ? firstLine.slice(0, 80) + "…" : firstLine;
+  const body = content === title ? null : content;
+
+  const { data: item } = await supabase
+    .from("stash_items")
+    .insert({ user_id: user.id, title, body, tags: [], source: "capture" })
+    .select("id")
+    .single();
+
+  await supabase
+    .from("captures")
+    .update({
+      status: "triaged",
+      converted_to: "stash",
+      converted_id: item?.id ?? null,
+      triaged_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  revalidatePath("/dashboard");
+  revalidatePath("/stash");
+}
+
 // --- Writing ----------------------------------------------------------------
 
 export async function addWritingIdea(formData: FormData) {

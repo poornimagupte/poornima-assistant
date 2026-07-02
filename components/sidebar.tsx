@@ -10,6 +10,7 @@ import {
   BookOpen,
   Scissors,
   Home,
+  Archive,
   LogOut,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const NAV = [
   { label: "Meals",     icon: UtensilsCrossed,  href: "/meals",     ready: true },
   { label: "Staff",     icon: Home,             href: "/staff",     ready: true },
   { label: "Writing",   icon: PenLine,          href: "/writing",   ready: true },
+  { label: "Stash",     icon: Archive,          href: "/stash",     ready: true },
   { label: "Reading",   icon: BookOpen,         href: "#",          ready: false },
   { label: "Crochet",   icon: Scissors,         href: "/crochet",   ready: true },
 ];

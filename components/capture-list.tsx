@@ -1,6 +1,6 @@
-import { ArrowRight, X, Inbox } from "lucide-react";
+import { ArrowRight, X, Inbox, Archive } from "lucide-react";
 import type { Capture } from "@/lib/types";
-import { archiveCapture, captureToTask } from "@/app/actions";
+import { archiveCapture, captureToTask, captureToStash } from "@/app/actions";
 
 // The inbox. Each item can become a task or be archived — server-action
 // forms, no client JS needed.
@@ -37,6 +37,18 @@ export function CaptureList({ captures }: { captures: Capture[] }) {
                   className="rounded p-1 text-faint opacity-0 group-hover:opacity-100 hover:text-accent"
                 >
                   <ArrowRight size={15} strokeWidth={1.75} />
+                </button>
+              </form>
+
+              <form action={captureToStash}>
+                <input type="hidden" name="id" value={c.id} />
+                <input type="hidden" name="content" value={c.content} />
+                <button
+                  type="submit"
+                  title="Save to Stash"
+                  className="rounded p-1 text-faint opacity-0 group-hover:opacity-100 hover:text-accent"
+                >
+                  <Archive size={15} strokeWidth={1.75} />
                 </button>
               </form>
 

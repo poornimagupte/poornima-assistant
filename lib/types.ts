@@ -130,6 +130,23 @@ export type StaffWithBalance = Staff & {
   last_salary_date: string | null;
 };
 
+// ─── Stash ───────────────────────────────────────────────────────────────────
+
+export type StashSource = "manual" | "capture" | "evernote";
+
+export interface StashItem {
+  id: string;
+  user_id: string;
+  title: string;
+  body: string | null;
+  source_url: string | null;
+  tags: string[];
+  source: StashSource;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 // ─── Writing ─────────────────────────────────────────────────────────────────
 
 export type WritingStage = "idea" | "outlining" | "drafting" | "editing" | "published";

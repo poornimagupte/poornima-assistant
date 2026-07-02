@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { todayRange } from "@/lib/date";
-import type { Task, Capture, MealPlan, Staff, StaffTransaction } from "@/lib/types";
+import type { Task, Capture, MealPlan, Staff, StaffTransaction, StashItem } from "@/lib/types";
+import { StashResurfaceCard } from "@/components/stash-resurface-card";
 import { Sidebar } from "@/components/sidebar";
 import { QuickCapture } from "@/components/quick-capture";
 import { CaptureList } from "@/components/capture-list";
@@ -87,6 +88,24 @@ export default async function DashboardPage() {
     (salaryTx as StaffTransaction[]) ?? []
   );
 
+  // Random stash resurface: count, then fetch one at a random offset.
+  const { count: stashCount } = await supabase
+    .from("stash_items")
+    .select("*", { count: "exact", head: true })
+    .is("deleted_at", null);
+
+  let stashItem: StashItem | null = null;
+  if (stashCount && stashCount > 0) {
+    const offset = Math.floor(Math.random() * stashCount);
+    const { data } = await supabase
+      .from("stash_items")
+      .select("*")
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .range(offset, offset);
+    stashItem = (data?.[0] as StashItem) ?? null;
+  }
+
   // Today's meal plan
   const todayDate = new Date().toLocaleDateString("en-CA", { timeZone: tz }); // YYYY-MM-DD
   const { data: mealPlan } = await supabase
@@ -124,6 +143,7 @@ export default async function DashboardPage() {
             <PayRemindersCard reminders={payReminders} />
             <CaptureList captures={(captures as Capture[]) ?? []} />
             <TodayMenuCard plan={(mealPlan as MealPlan) ?? null} />
+            <StashResurfaceCard item={stashItem} />
           </div>
         </div>
       </main>
