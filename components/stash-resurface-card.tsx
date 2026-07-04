@@ -1,4 +1,4 @@
-import { Shuffle } from "lucide-react";
+import { Package } from "lucide-react";
 import type { StashItem } from "@/lib/types";
 
 // "Random from your stash" — resurfaces something you saved and forgot.
@@ -16,7 +16,7 @@ export function StashResurfaceCard({ item }: { item: StashItem | null }) {
   return (
     <section className="card p-4 md:p-5">
       <div className="mb-3 flex items-center gap-2">
-        <Shuffle size={17} strokeWidth={1.75} className="text-muted" />
+        <Package size={17} strokeWidth={1.75} className="text-muted" />
         <h2 className="text-base font-medium">From your stash</h2>
       </div>
 

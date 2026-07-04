@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Recipe, MealPlan } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { MealsPageClient } from "@/components/meals-page-client";
 
 export default async function MealsPage() {
@@ -37,9 +37,7 @@ export default async function MealsPage() {
     .order("date");
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"} maxWidth="">
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Meals</h1>
           <p className="mt-1 text-sm text-muted">
@@ -50,7 +48,6 @@ export default async function MealsPage() {
           recipes={(recipes as Recipe[]) ?? []}
           plans={(plans as MealPlan[]) ?? []}
         />
-      </main>
-    </div>
+      </AppShell>
   );
 }

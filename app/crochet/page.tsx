@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { CrochetItem } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { CrochetBoard } from "@/components/crochet-board";
 
 export default async function CrochetPage() {
@@ -19,9 +19,7 @@ export default async function CrochetPage() {
     .order("updated_at", { ascending: false });
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-5xl">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"} maxWidth="max-w-5xl">
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Crochet</h1>
           <p className="mt-1 text-sm text-muted">
@@ -29,7 +27,6 @@ export default async function CrochetPage() {
           </p>
         </header>
         <CrochetBoard items={(items as CrochetItem[]) ?? []} />
-      </main>
-    </div>
+      </AppShell>
   );
 }

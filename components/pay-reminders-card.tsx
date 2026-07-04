@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import type { PayReminder } from "@/lib/staff-pay";
 
 const fmt = (n: number) =>
@@ -18,7 +18,7 @@ export function PayRemindersCard({ reminders }: { reminders: PayReminder[] }) {
   return (
     <section className="card p-4 md:p-5">
       <div className="mb-3 flex items-center gap-2">
-        <Wallet size={18} strokeWidth={1.75} className="text-muted" />
+        <CreditCard size={18} strokeWidth={1.75} className="text-muted" />
         <h2 className="text-base font-medium">Salaries Due</h2>
       </div>
 

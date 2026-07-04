@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { TaskWithReminders, Project } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { TaskManager } from "@/components/task-manager";
 
 export default async function TasksPage() {
@@ -46,9 +46,7 @@ export default async function TasksPage() {
     .order("name");
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-5xl">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"} maxWidth="max-w-5xl">
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Tasks</h1>
           <p className="mt-1 text-sm text-muted">
@@ -60,7 +58,6 @@ export default async function TasksPage() {
           completed={(completed as TaskWithReminders[]) ?? []}
           projects={(projects as Project[]) ?? []}
         />
-      </main>
-    </div>
+      </AppShell>
   );
 }

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { WritingPipeline } from "@/components/writing-pipeline";
 
 export default async function WritingPage() {
@@ -19,9 +19,7 @@ export default async function WritingPage() {
     .order("updated_at", { ascending: false });
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"} maxWidth="">
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Writing</h1>
           <p className="mt-1 text-sm text-muted">
@@ -29,7 +27,6 @@ export default async function WritingPage() {
           </p>
         </header>
         <WritingPipeline posts={(posts as BlogPost[]) ?? []} />
-      </main>
-    </div>
+      </AppShell>
   );
 }

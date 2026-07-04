@@ -3,10 +3,10 @@ import type { MealPlan } from "@/lib/types";
 
 export function TodayMenuCard({ plan }: { plan: MealPlan | null }) {
   const meals = [
-    { emoji: "☀️", label: "Breakfast", value: plan?.breakfast },
-    { emoji: "🍛", label: "Lunch", value: plan?.lunch },
-    { emoji: "🍵", label: "Snacks", value: plan?.snacks },
-    { emoji: "🌙", label: "Dinner", value: plan?.dinner },
+    { letter: "B", label: "Breakfast", value: plan?.breakfast },
+    { letter: "L", label: "Lunch", value: plan?.lunch },
+    { letter: "S", label: "Snacks", value: plan?.snacks },
+    { letter: "D", label: "Dinner", value: plan?.dinner },
   ];
 
   const hasAnyMeal = meals.some(m => m.value);
@@ -26,12 +26,12 @@ export function TodayMenuCard({ plan }: { plan: MealPlan | null }) {
           No menu planned — tap to decide.
         </a>
       ) : (
-        <div className="space-y-2.5">
-          {meals.map(({ emoji, label, value }) => (
-            <div key={label} className="flex items-start gap-2.5">
-              <span className="w-5 text-center text-sm shrink-0 pt-0.5">{emoji}</span>
+        <div className="space-y-2">
+          {meals.map(({ letter, label, value }) => (
+            <div key={label} className="flex gap-2">
+              <span className="w-5 shrink-0 text-xs text-faint pt-0.5">{letter}</span>
               <div className="min-w-0">
-                <p className="text-xs text-faint">{label}</p>
+                <p className="text-[11px] leading-tight text-faint">{label}</p>
                 <p className="text-sm leading-snug">
                   {value || <span className="text-faint">—</span>}
                 </p>

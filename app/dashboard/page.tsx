@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { todayRange } from "@/lib/date";
 import type { Task, Capture, MealPlan, Staff, StaffTransaction, StashItem } from "@/lib/types";
 import { StashResurfaceCard } from "@/components/stash-resurface-card";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { QuickCapture } from "@/components/quick-capture";
 import { CaptureList } from "@/components/capture-list";
 import { TodayPanel } from "@/components/today-panel";
@@ -122,11 +122,7 @@ export default async function DashboardPage() {
   }).format(new Date());
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar
-        name={profile?.display_name ?? user.email ?? "you"}
-      />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-4xl">
+    <AppShell name={user.email ?? profile?.display_name ?? "you"}>
         <header className="mb-6">
           <h1 className="text-2xl font-medium">
             {greeting(tz)}
@@ -146,7 +142,6 @@ export default async function DashboardPage() {
             <StashResurfaceCard item={stashItem} />
           </div>
         </div>
-      </main>
-    </div>
+    </AppShell>
   );
 }

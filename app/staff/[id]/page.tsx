@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Staff, StaffTransaction, StaffBalance, StaffAbsence } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { StaffDetail } from "@/components/staff-detail";
 
 export default async function StaffDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -30,16 +30,13 @@ export default async function StaffDetailPage({ params }: { params: Promise<{ id
     .order("date", { ascending: false });
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-4xl">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"}>
         <StaffDetail
           staff={staff as Staff}
           transactions={(transactions as StaffTransaction[]) ?? []}
           balance={balance as StaffBalance ?? null}
           absences={(absences as StaffAbsence[]) ?? []}
         />
-      </main>
-    </div>
+      </AppShell>
   );
 }

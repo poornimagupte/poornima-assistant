@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { StashItem } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { StashBoard } from "@/components/stash-board";
 
 const PAGE_SIZE = 50;
@@ -40,9 +40,7 @@ export default async function StashPage({
   const allTags = [...new Set((tagRows ?? []).flatMap((r) => r.tags as string[]))].sort();
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-4xl">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"}>
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Stash</h1>
           <p className="mt-1 text-sm text-muted">
@@ -56,7 +54,6 @@ export default async function StashPage({
           activeQuery={q ?? ""}
           activeTag={tag ?? ""}
         />
-      </main>
-    </div>
+      </AppShell>
   );
 }

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Staff, StaffBalance, StaffTransaction } from "@/lib/types";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 import { HouseholdRoster } from "@/components/household-roster";
 import { SpendSummary } from "@/components/spend-summary";
 
@@ -39,9 +39,7 @@ export default async function StaffPage() {
   }));
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar name={profile?.display_name ?? user.email ?? "you"} />
-      <main className="flex-1 px-6 py-8 md:px-10 max-w-4xl">
+    <AppShell name={profile?.display_name ?? user.email ?? "you"}>
         <header className="mb-6">
           <h1 className="text-2xl font-medium">Staff</h1>
           <p className="mt-1 text-sm text-muted">
@@ -50,7 +48,6 @@ export default async function StaffPage() {
         </header>
         <SpendSummary transactions={(recentTx as StaffTransaction[]) ?? []} />
         <HouseholdRoster staff={staffWithBalances} />
-      </main>
-    </div>
+      </AppShell>
   );
 }
