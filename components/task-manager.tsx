@@ -64,7 +64,7 @@ export function TaskManager({
   const selected = tasks.find((t) => t.id === selectedId) ?? null;
 
   return (
-    <div className="grid gap-3 md:grid-cols-[1fr_1.1fr]">
+    <div className="grid gap-3 md:grid-cols-[1.4fr_1fr]">
       <section className="card p-4">
         <form
           ref={formRef}
@@ -112,13 +112,14 @@ export function TaskManager({
                     <li key={t.id}>
                       <div
                         onClick={() => setSelectedId(t.id)}
-                        className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 ${
+                        className={`flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-1.5 ${
                           selectedId === t.id ? "bg-surface-2" : "hover:bg-surface-2"
                         }`}
                       >
                         <form
                           action={toggleTask}
                           onClick={(e) => e.stopPropagation()}
+                          className="pt-0.5"
                         >
                           <input type="hidden" name="id" value={t.id} />
                           <input type="hidden" name="done" value="true" />
@@ -133,13 +134,13 @@ export function TaskManager({
 
                         {t.priority && (
                           <span
-                            className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                            className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${
                               PRIORITY_DOT[t.priority]
                             }`}
                           />
                         )}
 
-                        <span className="flex-1 truncate text-sm">
+                        <span className="flex-1 min-w-0 break-words text-sm leading-snug">
                           {t.title}
                         </span>
 
@@ -147,12 +148,12 @@ export function TaskManager({
                           <Bell
                             size={13}
                             strokeWidth={1.75}
-                            className="text-faint"
+                            className="mt-1 shrink-0 text-faint"
                           />
                         )}
                         {t.due_at && (
                           <span
-                            className={`text-xs ${
+                            className={`shrink-0 whitespace-nowrap pt-0.5 text-xs ${
                               bucket === "Overdue" ? "text-red-500" : "text-faint"
                             }`}
                           >
@@ -193,11 +194,11 @@ export function TaskManager({
                         <CheckCircle2 size={16} strokeWidth={1.75} />
                       </button>
                     </form>
-                    <span className="flex-1 truncate text-sm text-muted line-through">
+                    <span className="flex-1 min-w-0 break-words text-sm leading-snug text-muted line-through">
                       {t.title}
                     </span>
                     {t.completed_at && (
-                      <span className="text-xs text-faint">
+                      <span className="shrink-0 whitespace-nowrap text-xs text-faint">
                         {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(new Date(t.completed_at))}
                       </span>
                     )}
