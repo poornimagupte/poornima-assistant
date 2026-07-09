@@ -11,6 +11,7 @@ import {
   Scissors,
   Home,
   Archive,
+  IndianRupee,
   LogOut,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const NAV = [
   { label: "Plan",    icon: CalendarRange,   href: "/plan",      ready: true },
   { label: "Meals",   icon: UtensilsCrossed, href: "/meals",     ready: true },
   { label: "Staff",   icon: Home,            href: "/staff",     ready: true },
+  { label: "Expenses", icon: IndianRupee,    href: "/expenses",  ready: true },
   { label: "Writing", icon: PenLine,         href: "/writing",   ready: true },
   { label: "Stash",   icon: Archive,         href: "/stash",     ready: true },
   { label: "Reading", icon: BookOpen,        href: "#",          ready: false },

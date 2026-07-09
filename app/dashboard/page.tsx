@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { todayRange } from "@/lib/date";
-import type { Task, Capture, MealPlan, Staff, StaffTransaction, StashItem } from "@/lib/types";
+import type { Task, Capture, MealPlan, Staff, StaffTransaction, StashItem, Expense } from "@/lib/types";
 import { StashResurfaceCard } from "@/components/stash-resurface-card";
+import { ExpenseMonthCard } from "@/components/expense-month-card";
 import { AppShell } from "@/components/app-shell";
 import { QuickCapture } from "@/components/quick-capture";
 import { CaptureList } from "@/components/capture-list";
@@ -88,6 +89,13 @@ export default async function DashboardPage() {
     (salaryTx as StaffTransaction[]) ?? []
   );
 
+  // This month's expenses for the glance card.
+  const { data: monthExpenses } = await supabase
+    .from("expenses")
+    .select("*")
+    .is("deleted_at", null)
+    .gte("date", monthStart);
+
   // Random stash resurface: count, then fetch one at a random offset.
   const { count: stashCount } = await supabase
     .from("stash_items")
@@ -137,6 +145,7 @@ export default async function DashboardPage() {
           <TodayPanel tasks={(tasks as Task[]) ?? []} calendarEvents={calendarEvents} timeZone={tz} />
           <div className="space-y-3">
             <PayRemindersCard reminders={payReminders} />
+            <ExpenseMonthCard expenses={(monthExpenses as Expense[]) ?? []} />
             <CaptureList captures={(captures as Capture[]) ?? []} />
             <TodayMenuCard plan={(mealPlan as MealPlan) ?? null} />
             <StashResurfaceCard item={stashItem} />

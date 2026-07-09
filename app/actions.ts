@@ -188,6 +188,56 @@ export async function removeReminder(formData: FormData) {
   revalidatePath("/tasks");
 }
 
+// --- Expenses -----------------------------------------------------------------
+
+export async function addExpense(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const get = (k: string) => { const v = String(formData.get(k) ?? "").trim(); return v === "" ? null : v; };
+  const amount = Number(get("amount") ?? 0);
+  if (!amount || amount <= 0) return;
+
+  await supabase.from("expenses").insert({
+    user_id: user.id,
+    date: get("date") ?? new Date().toISOString().slice(0, 10),
+    amount,
+    category: get("category") ?? "other",
+    method: get("method"),
+    note: get("note"),
+  });
+  revalidatePath("/expenses");
+  revalidatePath("/dashboard");
+}
+
+export async function updateExpense(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const supabase = await createClient();
+  const get = (k: string) => { const v = String(formData.get(k) ?? "").trim(); return v === "" ? null : v; };
+  const amount = Number(get("amount") ?? 0);
+  if (!amount || amount <= 0) return;
+
+  await supabase.from("expenses").update({
+    date: get("date") ?? new Date().toISOString().slice(0, 10),
+    amount,
+    category: get("category") ?? "other",
+    method: get("method"),
+    note: get("note"),
+  }).eq("id", id);
+  revalidatePath("/expenses");
+  revalidatePath("/dashboard");
+}
+
+export async function deleteExpense(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const supabase = await createClient();
+  await supabase.from("expenses").update({ deleted_at: new Date().toISOString() }).eq("id", id);
+  revalidatePath("/expenses");
+  revalidatePath("/dashboard");
+}
+
 // --- Stash --------------------------------------------------------------------
 
 export async function addStashItem(formData: FormData) {

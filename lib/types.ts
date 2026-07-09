@@ -130,6 +130,27 @@ export type StaffWithBalance = Staff & {
   last_salary_date: string | null;
 };
 
+// ─── Expenses ────────────────────────────────────────────────────────────────
+
+export type ExpenseCategory =
+  | "groceries" | "eating_out" | "transport" | "household"
+  | "shopping" | "health" | "kids" | "kids_fees"
+  | "entertainment" | "staff" | "subscriptions" | "other";
+
+export type ExpenseMethod = "cash" | "upi" | "card" | "bank" | "other";
+
+export interface Expense {
+  id: string;
+  user_id: string;
+  date: string;
+  amount: number;
+  category: ExpenseCategory;
+  method: ExpenseMethod | null;
+  note: string | null;
+  created_at: string;
+  deleted_at: string | null;
+}
+
 // ─── Stash ───────────────────────────────────────────────────────────────────
 
 export type StashSource = "manual" | "capture" | "evernote";
